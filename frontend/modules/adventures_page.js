@@ -5,7 +5,17 @@ import config from "../conf/index.js";
 function getCityFromURL(search) {
   // TODO: MODULE_ADVENTURES
   // 1. Extract the city id from the URL's Query Param and return it
+  
+  let text = search;
+  let pos = text.search("=");
 
+  let cityName = text.slice(pos+1,);
+  
+  if (cityName === "Bengaluru"){
+    cityName = "paris";
+  }
+  return cityName;
+  
 }
 
 //Implementation of fetch call with a paramterized input based on city
@@ -13,12 +23,50 @@ async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
 
+  let apiURL = `http://43.204.206.14:8082/adventures/?city=${city}`
+
+  try{
+     let response = await fetch(apiURL);
+     let adventureData = await response.json();
+
+     return adventureData;
+     console.log(adventureData);
+  }
+
+  catch(err){
+       
+    return null;
+  }
+
 }
 
 //Implementation of DOM manipulation to add adventures for the given city from list of adventures
 function addAdventureToDOM(adventures) {
   // TODO: MODULE_ADVENTURES
   // 1. Populate the Adventure Cards and insert those details into the DOM
+
+  let rowElement = document.getElementById("data");
+  
+  for (let i=0; i<adventures.length; i++){
+
+    let colElement = document.createElement("div");
+    colElement.className = "col-12 col-sm-2 col-lg-3 mb-4";
+    
+    let adventureDetailsUrl = `detail/?adventure=${adventures[i].id}`;
+    console.log(adventureDetailsUrl);
+
+     colElement.innerHTML = 
+     `
+      <a href=${adventureDetailsUrl} id=${adventures[i].id}>
+      
+      <div class="activity-card">
+      <img src=${adventures[i].image} alt="">
+       </div>
+      </a>
+     `;
+    rowElement.append(colElement);
+     
+  }
 
 }
 
