@@ -23,7 +23,7 @@ async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
 
-  let apiURL = `http://43.204.206.14:8082/adventures/?city=${city}`
+  let apiURL = `http://13.235.141.112:8082/adventures/?city=${city}`
 
   try{
      let response = await fetch(apiURL);
@@ -53,13 +53,12 @@ function addAdventureToDOM(adventures) {
     colElement.className = "col-12 col-sm-2 col-lg-3 mb-4";
     
     let adventureDetailsUrl = `detail/?adventure=${adventures[i].id}`;
-    console.log(adventureDetailsUrl);
 
      colElement.innerHTML = 
      `
       <a href=${adventureDetailsUrl} id=${adventures[i].id}>
       
-      <div class="activity-card">
+      <div class="activity-card" >
       <img src=${adventures[i].image} alt="">
        </div>
       </a>
@@ -75,12 +74,34 @@ function filterByDuration(list, low, high) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on Duration and return filtered list
 
+
+  let filteredList = [];
+    for (let i=0; i<list.length; i++){
+      if (list[i].duration >= low && list[i].duration<=high){
+        filteredList.push(list[i]);
+      }
+    }
+  return filteredList;
 }
 
 //Implementation of filtering by category which takes in a list of adventures, list of categories to be filtered upon and returns a filtered list of adventures.
 function filterByCategory(list, categoryList) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on their Category and return filtered list
+
+  let filteredList = [];
+
+  for (let i=0; i<list.length; i++){
+
+  let presentCategory = list[i].category;
+  let pos = categoryList.indexOf(presentCategory);
+
+  if (pos !== -1){
+    filteredList.push(list[i]);
+  }
+  }
+
+  return filteredList;
 
 }
 
@@ -97,6 +118,41 @@ function filterFunction(list, filters) {
   // 2. Depending on which filters are needed, invoke the filterByDuration() and/or filterByCategory() methods
 
 
+let categoryList = filters["category"];
+console.log(categoryList);
+ 
+let durationStr = filters["duration"];
+let pos = durationStr.indexOf("-");
+let lowStr = durationStr.slice(0,pos);
+let highStr = durationStr.slice(pos+1);
+
+let low = parseInt(lowStr);
+let high = parseInt(highStr);
+
+
+   let durationLength = filters["duration"].length;
+   let categoryLength = filters["category"].length;
+
+   if (durationLength>0 && categoryLength>0){
+     //filterByDuration();
+      let filteredList1 =  filterByCategory(list,categoryList);
+      let filteredList2 = filterByDuration(filteredList1, low,high);
+
+      return filteredList2;
+   }
+
+   else if (durationLength>0){
+    return filterByDuration(filteredList1, low,high);
+   }
+
+   else if(categoryLength>0){
+   return filterByCategory(list,categoryList);
+   }
+
+   else{
+    return list;
+   }
+
   // Place holder for functionality to work in the Stubs
   return list;
 }
@@ -106,6 +162,8 @@ function saveFiltersToLocalStorage(filters) {
   // TODO: MODULE_FILTERS
   // 1. Store the filters as a String to localStorage
 
+  window.localStorage.setItem('filters', JSON.stringify(filters));
+
   return true;
 }
 
@@ -113,6 +171,9 @@ function saveFiltersToLocalStorage(filters) {
 function getFiltersFromLocalStorage() {
   // TODO: MODULE_FILTERS
   // 1. Get the filters from localStorage and return String read as an object
+  
+  let filters = window.localStorage.getItem('filters');
+  JSON.parse(filters);
 
 
   // Place holder for functionality to work in the Stubs
@@ -126,6 +187,20 @@ function getFiltersFromLocalStorage() {
 function generateFilterPillsAndUpdateDOM(filters) {
   // TODO: MODULE_FILTERS
   // 1. Use the filters given as input, update the Duration Filter value and Generate Category Pills
+
+
+  let categoryList = filters["category"];
+  let categoryLength = categoryList.length;
+  
+  let categoryFlex = document.getElementById("category-list");
+
+  for (let i=0; i<categoryLength; i++){
+
+    let categoryPill = document.createElement("div");
+    categoryPill.textContent = categoryList[i];
+    categoryPill.setAttribute("class","category-filter");
+     categoryFlex.append(categoryPill);
+  }
 
 }
 export {
