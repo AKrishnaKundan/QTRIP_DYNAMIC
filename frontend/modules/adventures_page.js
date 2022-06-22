@@ -1,6 +1,8 @@
 
 import config from "../conf/index.js";
 
+let workspaceIp = "43.204.194.23";
+
 //Implementation to extract city from query params
 function getCityFromURL(search) {
   // TODO: MODULE_ADVENTURES
@@ -10,11 +12,8 @@ function getCityFromURL(search) {
   let pos = text.search("=");
 
   let cityName = text.slice(pos+1,);
-  
-  if (cityName === "Bengaluru"){
-    cityName = "paris";
-  }
-  return cityName;
+ 
+  return cityName.toLowerCase();
   
 }
 
@@ -23,18 +22,16 @@ async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
 
-  let apiURL = `http://13.235.141.112:8082/adventures/?city=${city}`
+  let apiURL = `http://${workspaceIp}:8082/adventures/?city=${city}`
 
   try{
      let response = await fetch(apiURL);
      let adventureData = await response.json();
 
      return adventureData;
-     console.log(adventureData);
   }
 
   catch(err){
-       
     return null;
   }
 
@@ -47,13 +44,15 @@ function addAdventureToDOM(adventures) {
 
   let rowElement = document.getElementById("data");
   
-  for (let i=0; i<adventures.length; i++){
+  console.log(adventures[0]);
 
+  for (let i=0; i<adventures.length; i++){
+    
     let colElement = document.createElement("div");
     colElement.className = "col-12 col-sm-2 col-lg-3 mb-4";
+  
+    let adventureDetailsUrl = `http://${workspaceIp}/detail/?adventure=${adventures[i].id}`;
     
-    let adventureDetailsUrl = `detail/?adventure=${adventures[i].id}`;
-
      colElement.innerHTML = 
      `
       <a href=${adventureDetailsUrl} id=${adventures[i].id}>
