@@ -1,6 +1,6 @@
 import config from "../conf/index.js";
 
-let workspaceIp = "43.204.194.23";
+let workspaceIp = "3.108.212.47";
 
 async function init() {
   //Fetches list of all cities along with their images and description

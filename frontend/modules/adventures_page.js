@@ -1,7 +1,7 @@
 
 import config from "../conf/index.js";
 
-let workspaceIp = "43.204.194.23";
+let workspaceIp = "3.108.212.47";
 
 //Implementation to extract city from query params
 function getCityFromURL(search) {
@@ -23,7 +23,7 @@ async function fetchAdventures(city) {
   // 1. Fetch adventures using the Backend API and return the data
 
   let apiURL = `http://${workspaceIp}:8082/adventures/?city=${city}`
-
+  
   try{
      let response = await fetch(apiURL);
      let adventureData = await response.json();
@@ -50,8 +50,8 @@ function addAdventureToDOM(adventures) {
     
     let colElement = document.createElement("div");
     colElement.className = "col-12 col-sm-2 col-lg-3 mb-4";
-  
-    let adventureDetailsUrl = `http://${workspaceIp}/detail/?adventure=${adventures[i].id}`;
+    console.log(adventures[i].id);
+    let adventureDetailsUrl = `detail/?adventure=${adventures[i].id}`;
     
      colElement.innerHTML = 
      `
@@ -115,7 +115,6 @@ function filterFunction(list, filters) {
   // TODO: MODULE_FILTERS
   // 1. Handle the 3 cases detailed in the comments above and return the filtered list of adventures
   // 2. Depending on which filters are needed, invoke the filterByDuration() and/or filterByCategory() methods
-
 
 let categoryList = filters["category"];
 console.log(categoryList);
