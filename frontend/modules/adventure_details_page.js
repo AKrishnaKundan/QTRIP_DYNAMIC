@@ -1,6 +1,6 @@
 import config from "../conf/index.js";
 
-let workspaceIp = "3.108.212.47";
+let workspaceIp = "3.7.114.210";
 
 //Implementation to extract adventure ID from query params
 function getAdventureIdFromURL(search) {
