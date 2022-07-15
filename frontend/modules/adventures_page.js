@@ -1,18 +1,15 @@
 
 import config from "../conf/index.js";
 
-let workspaceIp = "3.7.114.210";
-
 //Implementation to extract city from query params
 function getCityFromURL(search) {
   // TODO: MODULE_ADVENTURES
   // 1. Extract the city id from the URL's Query Param and return it
-  
   let text = search;
   let pos = text.search("=");
 
   let cityName = text.slice(pos+1,);
- 
+
   return cityName.toLowerCase();
   
 }
@@ -22,16 +19,15 @@ async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
 
-  let apiURL = `http://${workspaceIp}:8082/adventures/?city=${city}`
+  let apiURL = `${config.backendEndpoint}/adventures/?city=${city}`
   
   try{
      let response = await fetch(apiURL);
      let adventureData = await response.json();
-
      return adventureData;
   }
 
-  catch(err){
+  catch (err) {
     return null;
   }
 
@@ -41,27 +37,35 @@ async function fetchAdventures(city) {
 function addAdventureToDOM(adventures) {
   // TODO: MODULE_ADVENTURES
   // 1. Populate the Adventure Cards and insert those details into the DOM
+  let rowElement = document.getElementById("data"); 
 
-  let rowElement = document.getElementById("data");
-  
-  console.log(adventures[0]);
+  for (let i = 0; i < adventures.length; i++){
 
-  for (let i=0; i<adventures.length; i++){
-    
     let colElement = document.createElement("div");
     colElement.className = "col-12 col-sm-2 col-lg-3 mb-4";
-    console.log(adventures[i].id);
     let adventureDetailsUrl = `detail/?adventure=${adventures[i].id}`;
     
      colElement.innerHTML = 
      `
-      <a href=${adventureDetailsUrl} id=${adventures[i].id}>
-      
+    <a href=${adventureDetailsUrl} id=${adventures[i].id}>
+    
       <div class="activity-card" >
-      <img src=${adventures[i].image} alt="">
-       </div>
-      </a>
-     `;
+        <img src=${adventures[i].image} alt="Image not found">
+          <div class="category-banner">${adventures[i].category}</div>
+            <div class="activity-card-text w-100 mt-3" style="font-size: 1.2rem;">
+        
+              <div class="d-block d-md-flex justify-content-between">
+                <p class="ps-3 pe-3">${adventures[i].name}</p>
+                <p class="ps-3 pe-3">₹${adventures[i].costPerHead}</p>
+              </div> 
+              <div class="d-block d-md-flex justify-content-between">
+                <p class="ps-3 pe-3">Duration</p>
+                <p class="ps-3 pe-3">${adventures[i].duration} Hours</p>
+              </div>   
+            </div>
+          </div>
+      </div>
+    </a>`;
     rowElement.append(colElement);
      
   }
@@ -72,8 +76,6 @@ function addAdventureToDOM(adventures) {
 function filterByDuration(list, low, high) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on Duration and return filtered list
-
-
   let filteredList = [];
     for (let i=0; i<list.length; i++){
       if (list[i].duration >= low && list[i].duration<=high){
@@ -88,7 +90,7 @@ function filterByCategory(list, categoryList) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on their Category and return filtered list
 
-  let filteredList = [];
+  let filteredList = []; 
 
   for (let i=0; i<list.length; i++){
 
@@ -116,38 +118,42 @@ function filterFunction(list, filters) {
   // 1. Handle the 3 cases detailed in the comments above and return the filtered list of adventures
   // 2. Depending on which filters are needed, invoke the filterByDuration() and/or filterByCategory() methods
 
-let categoryList = filters["category"];
-console.log(categoryList);
- 
-let durationStr = filters["duration"];
-let pos = durationStr.indexOf("-");
-let lowStr = durationStr.slice(0,pos);
-let highStr = durationStr.slice(pos+1);
+  let categoryList = filters["category"];
+  let durationStr = filters["duration"];
 
-let low = parseInt(lowStr);
-let high = parseInt(highStr);
+  let categoryLength = filters["category"].length; 
+  let durationLength = filters["duration"].length;
 
-
-   let durationLength = filters["duration"].length;
-   let categoryLength = filters["category"].length;
-
-   if (durationLength>0 && categoryLength>0){
+  if (durationLength>0 && categoryLength>0){
      //filterByDuration();
-      let filteredList1 =  filterByCategory(list,categoryList);
-      let filteredList2 = filterByDuration(filteredList1, low,high);
+    let pos = durationStr.indexOf("-");
+    let lowStr = durationStr.slice(0,pos);
+    let highStr = durationStr.slice(pos+1);
 
-      return filteredList2;
+    let low = parseInt(lowStr);
+    let high = parseInt(highStr); 
+    
+    let filteredList1 = filterByCategory(list, categoryList);
+    let filteredList2 = filterByDuration(filteredList1, low,high);
+    return filteredList2;
+  }
+
+  else if (durationLength>0) {
+    let pos = durationStr.indexOf("-");
+    let lowStr = durationStr.slice(0,pos);
+    let highStr = durationStr.slice(pos+1);
+
+    let low = parseInt(lowStr);
+    let high = parseInt(highStr); 
+    
+    return filterByDuration(list, low, high);
+  }
+
+   else if (categoryLength>0){
+     return filterByCategory(list,categoryList);
    }
 
-   else if (durationLength>0){
-    return filterByDuration(filteredList1, low,high);
-   }
-
-   else if(categoryLength>0){
-   return filterByCategory(list,categoryList);
-   }
-
-   else{
+   else {
     return list;
    }
 
@@ -161,7 +167,6 @@ function saveFiltersToLocalStorage(filters) {
   // 1. Store the filters as a String to localStorage
 
   window.localStorage.setItem('filters', JSON.stringify(filters));
-
   return true;
 }
 
@@ -171,9 +176,8 @@ function getFiltersFromLocalStorage() {
   // 1. Get the filters from localStorage and return String read as an object
   
   let filters = window.localStorage.getItem('filters');
-  JSON.parse(filters);
-
-
+  return JSON.parse(filters);
+  
   // Place holder for functionality to work in the Stubs
   return null;
 }
@@ -185,22 +189,41 @@ function getFiltersFromLocalStorage() {
 function generateFilterPillsAndUpdateDOM(filters) {
   // TODO: MODULE_FILTERS
   // 1. Use the filters given as input, update the Duration Filter value and Generate Category Pills
-
-
+  
+  // update the Duration Filter value 
+  if (filters["duration"].length > 0) {
+    let durationStr = filters["duration"];
+    let options = document.getElementById("duration-select").options;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].id === durationStr) {
+        document.getElementById("duration-select").selectedIndex = i;
+        break;
+      }
+    }
+  }
+  
+  //Generate Category Pills
   let categoryList = filters["category"];
   let categoryLength = categoryList.length;
   
-  let categoryFlex = document.getElementById("category-list");
+  let categoryPills = document.getElementById("category-list");
 
   for (let i=0; i<categoryLength; i++){
 
-    let categoryPill = document.createElement("div");
-    categoryPill.textContent = categoryList[i];
-    categoryPill.setAttribute("class","category-filter");
-     categoryFlex.append(categoryPill);
-  }
+    let pillContent = document.createElement("div");
+    pillContent.setAttribute("class", "category-filter");
+    pillContent.setAttribute("id", categoryList[i]);
 
+    pillContent.innerHTML =
+      `${categoryList[i]}
+      <div class="close" style="cursor : pointer; display:inline" onclick="clearOneCategory(event)">x</div>`;
+     categoryPills.appendChild(pillContent);
+  }
 }
+
+
+
+
 export {
   getCityFromURL,
   fetchAdventures,

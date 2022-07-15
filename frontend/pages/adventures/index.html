@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/styles.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   
 </head>
 
 <body>
@@ -54,10 +55,10 @@
                             <option disabled selected value="">
                                 Filter by Duration (Hours)
                             </option>
-                            <option value="0-2">0-2 Hours</option>
-                            <option value="2-6">2-6 Hours</option>
-                            <option value="6-12">6-12 Hours</option>
-                            <option value="12-99">12+ Hours</option>
+                            <option value="0-2"   id="0-2">0-2 Hours</option>
+                            <option value="2-6"   id="2-6">2-6 Hours</option>
+                            <option value="6-12"  id="6-12" >6-12 Hours</option>
+                            <option value="12-99" id="12-99"">12+ Hours</option>
                         </select>
                         <div class="ms-3" style="color: #0645ad; cursor: pointer" onclick="clearDuration(event)">
                             Clear
@@ -120,7 +121,6 @@
                 ? getFiltersFromLocalStorage()
                 : { duration: "", category: [] };
 
-
         //entry point (executed when DOM is loaded)
         (async function () {
 
@@ -128,16 +128,16 @@
             let city = await getCityFromURL(window.location.search);
 
             //Fetches the adventures for the particular city
-            adventures = await fetchAdventures(city);
+            adventures = await fetchAdventures(city);     
+
+            // Updates the DOM with filter pills if any
+            generateFilterPillsAndUpdateDOM(filters);
 
             //Applies filters on the adventures list
             let filteredAdventures = filterFunction(adventures, filters);
 
             //Updates the filtered adventures list to the DOM
-            addAdventureToDOM(filteredAdventures)
-
-            // Updates the DOM with filter pills if any
-            generateFilterPillsAndUpdateDOM(filters);
+            addAdventureToDOM(filteredAdventures);
         })();
 
 
@@ -151,8 +151,8 @@
             document.getElementById("category-list").textContent = "";
              
              let updatedDuration = event.target.value;
-             document.getElementById("duration-select").selectedIndex = 0;
-
+             document.getElementById("duration-select").selectedIndex = event.target.selectedIndex;
+              
              filters["duration"] = updatedDuration;
              
              generateFilterPillsAndUpdateDOM(filters);
@@ -173,7 +173,7 @@
              document.getElementById("category-list").textContent = ""; 
 
              document.getElementById("duration-select").selectedIndex = 0;
-
+             
               filters["duration"] = "";
 
               generateFilterPillsAndUpdateDOM(filters);
@@ -224,11 +224,33 @@
             return self.indexOf(value) === index;
         }
 
+
+        function clearOneCategory(event){
+           document.getElementById("data").textContent = "";
+           document.getElementById("category-list").textContent = "";
+
+           let categoryName = event.target.id;
+           let idx = filters["category"].indexOf(categoryName);
+           filters["category"].splice(idx,1);
+           filters["category"] = filters["category"].filter(onlyUnique);
+
+
+            generateFilterPillsAndUpdateDOM(filters);
+            let filteredAdventures = filterFunction(adventures, filters);
+            addAdventureToDOM(filteredAdventures);
+
+            // TODO: MODULE_FILTERS
+            // 1. Invoke saveFiltersToLocalStorage here
+            saveFiltersToLocalStorage(filters);         
+
+        }
+    
         //registering module based functions in the DOM in order for them to work
         window.selectDuration = selectDuration;
         window.selectCategory = selectCategory;
         window.clearDuration = clearDuration;
         window.clearCategory = clearCategory;
+        window.clearOneCategory = clearOneCategory;
     </script>
 </body>
 

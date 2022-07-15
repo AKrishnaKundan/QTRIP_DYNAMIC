@@ -1,11 +1,9 @@
 import config from "../conf/index.js";
 
-let workspaceIp = "3.7.114.210";
-
 async function init() {
   //Fetches list of all cities along with their images and description
   let cities = await fetchCities();
-  
+
   //Updates the DOM with the cities
   cities.forEach((key) => {
     addCityToDOM(key.id, key.city, key.description, key.image);
@@ -17,10 +15,7 @@ async function fetchCities() {
   // TODO: MODULE_CITIES
   // 1. Fetch cities using the Backend API and return the data
   try {
-   //let response = await fetch("http://43.204.208.97:8082/cities");
-  
-
-   let response = await fetch(`http://${workspaceIp}:8082/cities`);
+   let response = await fetch(`${config.backendEndpoint}/cities`);
    let user = await response.json();
    console.log(user);
    return user;
@@ -66,5 +61,6 @@ function addCityToDOM(id, city, description, image) {
 
     tile_ele.append(tile_text);
 }
+
 
 export { init, fetchCities, addCityToDOM };
