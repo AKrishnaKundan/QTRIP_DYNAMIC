@@ -102,7 +102,7 @@ describe("Reservation Page Tests", function () {
     expect(
       document.getElementById("reservation-table").children[0].children[6]
         .innerHTML
-    ).toEqual( "4 November 2020, 9:32:31 pm");
+    ).toEqual("4 November 2020, 9:32:31 pm");
     expect(
       document.getElementById("reservation-table").children[1].children[4]
         .innerHTML
