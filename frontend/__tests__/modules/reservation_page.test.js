@@ -98,7 +98,7 @@ describe("Reservation Page Tests", function () {
     expect(
       document.getElementById("reservation-table").children[0].children[4]
         .innerHTML
-    ).toEqual("5/11/2020");
+    ).toEqual("5/12/2020");
     expect(
       document.getElementById("reservation-table").children[0].children[6]
         .innerHTML
