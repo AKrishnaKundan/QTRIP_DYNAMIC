@@ -67,6 +67,7 @@ function addReservationToTable(reservations) {
    
     let bookingDate = time.toLocaleDateString("en-IN", options2);
     let bookingTime = time.toLocaleTimeString();
+    bookingTime = bookingTime.toLowerCase();
     
     bookingTime = bookingDate +", "+ bookingTime;
   
