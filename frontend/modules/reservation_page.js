@@ -53,7 +53,7 @@ function addReservationToTable(reservations) {
     console.log(date);
     var options = {
       year: "numeric",
-      month: "2-digit",
+      month: "numeric",
       day: "numeric"
     };
     date = date.toLocaleDateString("en-IN", options);
@@ -68,7 +68,7 @@ function addReservationToTable(reservations) {
     let bookingDate = time.toLocaleDateString("en-IN", options2);
     let bookingTime = time.toLocaleTimeString();
     bookingTime = bookingTime.toLowerCase();
-    
+
     bookingTime = bookingDate +", "+ bookingTime;
   
   let tableRow = document.createElement("tr");

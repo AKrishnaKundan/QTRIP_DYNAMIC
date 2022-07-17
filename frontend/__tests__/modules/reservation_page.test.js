@@ -106,7 +106,7 @@ describe("Reservation Page Tests", function () {
     expect(
       document.getElementById("reservation-table").children[1].children[4]
         .innerHTML
-    ).toEqual("1/01/2021");
+    ).toEqual("1/1/2021");
     expect(
       document.getElementById("reservation-table").children[1].children[6]
         .innerHTML
