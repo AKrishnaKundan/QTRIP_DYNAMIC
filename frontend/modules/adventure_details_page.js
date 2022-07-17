@@ -19,7 +19,7 @@ async function fetchAdventureDetails(adventureId) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Fetch the details of the adventure by making an API call
   let apiURL = `${config.backendEndpoint}/adventures/detail?adventure=${adventureId}`
-  console.log("apiURL = "+apiURL);
+
   try {
      let response = await fetch(apiURL);
      let adventureDetails = await response.json();
