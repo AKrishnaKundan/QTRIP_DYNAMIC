@@ -48,7 +48,9 @@ function addReservationToTable(reservations) {
 
   for (let i = 0; i < reservations.length; i++){
     let givenDate = reservations[i].date.split("-");
-    let date = new Date(givenDate[0], givenDate[1], givenDate[2]);
+    console.log(givenDate);
+    let date = new Date(givenDate[0], givenDate[1] - 1, givenDate[2]);
+    console.log(date);
     var options = {
       year: "numeric",
       month: "2-digit",
