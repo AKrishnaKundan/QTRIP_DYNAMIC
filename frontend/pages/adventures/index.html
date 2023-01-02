@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -88,8 +87,8 @@
         </div>
     </div>
     <!-- Footer -->
-    <footer>
-        <div class="container">© QTrip 2020</div>
+    <footer class="footer">
+        <div>© QTrip 2020</div>
     </footer>
 
     <!-- Bootstrap script -->
@@ -231,7 +230,9 @@
 
            let categoryName = event.target.id;
            let idx = filters["category"].indexOf(categoryName);
+           console.log(idx);
            filters["category"].splice(idx,1);
+           console.log(filters["category"]);
            filters["category"] = filters["category"].filter(onlyUnique);
 
 

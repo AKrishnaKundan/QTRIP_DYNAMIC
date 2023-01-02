@@ -1,4 +1,3 @@
-
 import config from "../conf/index.js";
 
 //Implementation to extract city from query params
@@ -18,7 +17,6 @@ function getCityFromURL(search) {
 async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
-
   let apiURL = `${config.backendEndpoint}/adventures/?city=${city}`
   
   try{
@@ -42,24 +40,24 @@ function addAdventureToDOM(adventures) {
   for (let i = 0; i < adventures.length; i++){
 
     let colElement = document.createElement("div");
-    colElement.className = "col-12 col-sm-2 col-lg-3 mb-4";
+    colElement.className = "col-6 col-sm-2 col-md-4 col-lg-4 col-xl-3 mb-2 gx-1";
     let adventureDetailsUrl = `detail/?adventure=${adventures[i].id}`;
     
      colElement.innerHTML = 
      `
     <a href=${adventureDetailsUrl} id=${adventures[i].id}>
     
-      <div class="activity-card" >
+      <div class="activity-card">
         <img src=${adventures[i].image} alt="Image not found">
           <div class="category-banner">${adventures[i].category}</div>
-            <div class="activity-card-text w-100 mt-3" style="font-size: 1.2rem;">
+            <div class="activity-card-text w-100 mt-3">
         
               <div class="d-block d-md-flex justify-content-between">
-                <p class="ps-3 pe-3">${adventures[i].name}</p>
+                <p class="ps-3 pe-3 activity-card-heading">${adventures[i].name}</p>
                 <p class="ps-3 pe-3">₹${adventures[i].costPerHead}</p>
               </div> 
               <div class="d-block d-md-flex justify-content-between">
-                <p class="ps-3 pe-3">Duration</p>
+                <p class="ps-3 pe-3 activity-card-heading">Duration</p>
                 <p class="ps-3 pe-3">${adventures[i].duration} Hours</p>
               </div>   
             </div>
@@ -76,12 +74,14 @@ function addAdventureToDOM(adventures) {
 function filterByDuration(list, low, high) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on Duration and return filtered list
+
   let filteredList = [];
     for (let i=0; i<list.length; i++){
       if (list[i].duration >= low && list[i].duration<=high){
         filteredList.push(list[i]);
       }
     }
+
   return filteredList;
 }
 
@@ -201,7 +201,6 @@ function generateFilterPillsAndUpdateDOM(filters) {
       }
     }
   }
-  
   //Generate Category Pills
   let categoryList = filters["category"];
   let categoryLength = categoryList.length;
@@ -209,20 +208,19 @@ function generateFilterPillsAndUpdateDOM(filters) {
   let categoryPills = document.getElementById("category-list");
 
   for (let i=0; i<categoryLength; i++){
-
+    
     let pillContent = document.createElement("div");
     pillContent.setAttribute("class", "category-filter");
     pillContent.setAttribute("id", categoryList[i]);
 
     pillContent.innerHTML =
       `${categoryList[i]}
-      <div class="close" style="cursor : pointer; display:inline" onclick="clearOneCategory(event)">x</div>`;
-     categoryPills.appendChild(pillContent);
+      <div class="closecategory close" style="cursor : pointer; display:inline" onclick="clearOneCategory(event)">x</div>`;
+    pillContent.getElementsByClassName("closecategory")[0].id = categoryList[i];
+    categoryPills.appendChild(pillContent);
+
   }
 }
-
-
-
 
 export {
   getCityFromURL,
