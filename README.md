@@ -31,6 +31,9 @@ During the course of this project,
 
 • Implemented logic to dynamically plug in city data to the Landing page’s DOM
 
+![image](https://github.com/AKrishnaKundan/QTRIP_DYNAMIC/assets/93312488/11b6cb6f-5b9a-4dd7-8cb0-791ba6be2183)
+
+
 ## Implement the adventures page with multi-select filters
 
 • Fetched adventures data for the city by invoking the backend API from the page URL’s query parameter
